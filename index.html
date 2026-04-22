@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CiTiGov — India Citizen Trust Analytics Dashboard. Monitor, analyze and improve citizen trust in India's digital government services including DigiLocker, UMANG, Aadhaar and more." />
+  <meta name="keywords" content="citizen trust, digital india, e-governance, DigiLocker, UMANG, Aadhaar, transparency, analytics, public services, India" />
+  <meta property="og:title" content="CiTiGov — India Digital Trust Analytics" />
+  <meta property="og:description" content="Real-time monitoring of citizen trust in India's digital government services." />
+  <title>CiTiGov — India Citizen Trust Analytics Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <div class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="url(#logoGrad)"/>
+          <path d="M14 6L20 10V14C20 17.314 17.314 20 14 20C10.686 20 8 17.314 8 14V10L14 6Z" fill="white" opacity="0.9"/>
+          <circle cx="14" cy="14" r="3" fill="url(#logoGrad2)"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+              <stop offset="0%" stop-color="#1e40af"/>
+              <stop offset="100%" stop-color="#0ea5e9"/>
+            </linearGradient>
+            <linearGradient id="logoGrad2" x1="0" y1="0" x2="12" y2="12">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="100%" stop-color="#a5f3fc"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-text">Citi<span class="brand-accent">Gov</span></span>
+      </div>
+      <div class="nav-tagline">🇮🇳 India Digital Trust Analytics</div>
+    </div>
+
+    <div class="nav-links" id="navLinks" role="menubar">
+      <a href="#scorecard" class="nav-link active" role="menuitem" data-section="scorecard">Dashboard</a>
+      <a href="#trust-factors" class="nav-link" role="menuitem" data-section="trust-factors">Trust Pillars</a>
+      <a href="#reality-gap" class="nav-link" role="menuitem" data-section="reality-gap">Reality Gap</a>
+      <a href="#barriers" class="nav-link" role="menuitem" data-section="barriers">Barriers</a>
+      <a href="#simulator" class="nav-link" role="menuitem" data-section="simulator">Simulator</a>
+      <a href="#success-stories" class="nav-link" role="menuitem" data-section="success-stories">Case Studies</a>
+      <a href="#action-planner" class="nav-link" role="menuitem" data-section="action-planner">Action Plan</a>
+      <a href="#behind-build" class="nav-link" role="menuitem" data-section="behind-build">Behind the Build</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn-lang" id="langToggle" aria-label="Toggle language" title="Toggle multilingual support">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <button class="btn-view" id="viewToggle" aria-label="Switch view mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span id="viewLabel">Official View</span>
+      </button>
+      <a href="login.html" class="btn-login-nav" id="loginNavBtn" aria-label="Login to CitiGov">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+        </svg>
+        Login
+      </a>
+      <button class="btn-export" id="exportBtn" aria-label="Download report">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export Report
+      </button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="main-content" role="main">
+
+    <!-- ===== ABOUT / MISSION BANNER ===== -->
+    <section class="section about-section" id="about" aria-labelledby="about-title" style="padding-top:calc(var(--nav-h) + 32px);padding-bottom:52px;">
+      <div class="container">
+        <div class="about-hero-row">
+          <div class="about-hero-text">
+            <div class="section-badge" style="margin-bottom:14px;">
+              <span class="badge-dot pulse"></span>
+              What is CitiGov?
+            </div>
+            <h1 id="about-title" class="about-main-heading" data-i18n="about.title">
+              Rebuilding trust between <span class="about-accent">1.4 Billion</span> citizens and their government
+            </h1>
+            <p class="about-lead" data-i18n="about.lead">
+              CitiGov is India's first open Digital Trust Analytics Dashboard — a real-time platform that measures,
+              visualises, and helps improve citizen confidence in India's digital government services including
+              Aadhaar, DigiLocker, UMANG, UPI, CoWIN, and 1,700+ other e-governance platforms.
+            </p>
+            <div class="about-cta-row">
+              <a href="#scorecard" class="about-btn-primary">Explore the Dashboard →</a>
+              <a href="#behind-build" class="about-btn-ghost">How it's built</a>
+            </div>
+          </div>
+          <div class="about-pillars-mini">
+            <div class="about-mini-card">
+              <div class="about-mini-icon">📊</div>
+              <div class="about-mini-title" data-i18n="about.p1.title">Measure</div>
+              <div class="about-mini-desc" data-i18n="about.p1.desc">Track trust scores across 28 states using real survey data from 42,000+ Indian citizens</div>
+            </div>
+            <div class="about-mini-card">
+              <div class="about-mini-icon">🔍</div>
+              <div class="about-mini-title" data-i18n="about.p2.title">Analyse</div>
+              <div class="about-mini-desc" data-i18n="about.p2.desc">Identify the exact barriers — security fears, UX complexity, literacy gaps — holding adoption back</div>
+            </div>
+            <div class="about-mini-card">
+              <div class="about-mini-icon">⚡</div>
+              <div class="about-mini-title" data-i18n="about.p3.title">Simulate</div>
+              <div class="about-mini-desc" data-i18n="about.p3.desc">Use the interactive simulator to model how reforms like unified portals or stronger data laws change outcomes</div>
+            </div>
+            <div class="about-mini-card">
+              <div class="about-mini-icon">🗺️</div>
+              <div class="about-mini-title" data-i18n="about.p4.title">Act</div>
+              <div class="about-mini-desc" data-i18n="about.p4.desc">Turn insights into a personalised strategic action plan with drag-and-drop prioritisation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 1: EXECUTIVE TRUST SCORECARD ===== -->
+    <section class="section hero-section" id="scorecard" aria-labelledby="scorecard-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge">
+            <span class="badge-dot pulse"></span>
+            Live Trust Monitor · Updated March 2025 · India Focus
+          </div>
+          <h2 id="scorecard-title" class="section-title" data-i18n="hero.title">India Digital Trust Scorecard</h2>
+          <p class="section-subtitle">Real-time citizen trust index across India's digital government services — Aadhaar, DigiLocker, UMANG &amp; beyond</p>
+        </div>
+
+        <div class="hero-grid">
+          <!-- Main Trust Gauge -->
+          <div class="card trust-gauge-card" role="region" aria-label="Global trust index">
+            <div class="card-label">India Digital Trust Index</div>
+            <div class="gauge-container">
+              <canvas id="gaugeChart" width="260" height="160" aria-label="Trust gauge showing 54%"></canvas>
+              <div class="gauge-value">
+                <span class="gauge-number" id="gaugeNumber" data-target="54">0</span>
+                <span class="gauge-unit">%</span>
+              </div>
+              <div class="gauge-label-bottom">Citizen Trust</div>
+            </div>
+            <div class="trust-trend">
+              <span class="trend-up">↑ +9pp</span>
+              <span class="trend-label">from 45% in 2024</span>
+            </div>
+            <div class="tooltip-trigger" data-tooltip="Source: 2025 Digital India Foundation Trust Report & NASSCOM Survey. n=42,000+ Indian respondents across 28 states.">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Source info
+            </div>
+          </div>
+
+          <!-- Sector Comparison -->
+          <div class="card chart-card" role="region" aria-label="Sector trust comparison">
+            <div class="card-header">
+              <h3 class="card-title">India Sector Trust Comparison</h3>
+              <div class="card-badge badge-2025">2025</div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="sectorChart" aria-label="Bar chart comparing trust across sectors"></canvas>
+            </div>
+          </div>
+
+          <!-- Regional Heatmap Proxy -->
+          <div class="card heatmap-card" role="region" aria-label="Regional trust levels">
+            <div class="card-header">
+              <h3 class="card-title">Regional & Global Trust Monitor</h3>
+              <div class="filter-tabs" role="tablist">
+                <button class="filter-tab active" role="tab" aria-selected="true" data-filter="all">All</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="high">High</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="low">Low</button>
+              </div>
+            </div>
+            <div class="region-grid-wrapper">
+              <div class="region-sub-col">
+                <div class="region-sub-title">Indian States 🇮🇳</div>
+                <div class="region-list" id="regionList" role="list">
+                  <!-- populated by JS -->
+                </div>
+              </div>
+              <div class="region-sub-col">
+                <div class="region-sub-title">Global Leaders 🌍</div>
+                <div class="region-list" id="globalList" role="list">
+                  <!-- populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Stats Strip -->
+          <div class="stats-strip">
+            <div class="stat-item" role="listitem">
+              <div class="stat-icon stat-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              </div>
+              <div class="stat-value">9×</div>
+              <div class="stat-label">more likely to trust digital gov when satisfied</div>
+            </div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-icon stat-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="stat-value">1.39B</div>
+              <div class="stat-label">citizens with Aadhaar coverage</div>
+            </div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-icon stat-orange">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="stat-value">6.5B+</div>
+              <div class="stat-label">DigiLocker documents issued</div>
+            </div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-icon stat-purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="stat-value">1,700+</div>
+              <div class="stat-label">services on UMANG app platform</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: TRUST FACTOR BREAKDOWN ===== -->
+    <section class="section" id="trust-factors" aria-labelledby="trust-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge">Trust Pillars</div>
+          <h2 id="trust-title" class="section-title">India Trust Factor Breakdown</h2>
+          <p class="section-subtitle">Four core pillars determining citizen confidence in India's Digital Public Infrastructure (DPI)</p>
+        </div>
+
+        <div class="pillars-grid">
+          <!-- Pillar 1: Security -->
+          <div class="pillar-card" id="pillar-security" tabindex="0" role="button" aria-expanded="false" aria-controls="pillar-security-detail" data-pillar="security">
+            <div class="pillar-icon security">🔒</div>
+            <div class="pillar-score-ring">
+              <svg class="ring-svg" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e3a5f" stroke-width="6"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#ef4444" stroke-width="6"
+                  stroke-dasharray="201" stroke-dashoffset="74" stroke-linecap="round" transform="rotate(-90 40 40)"
+                  class="ring-progress" data-value="63"/>
+              </svg>
+              <div class="ring-label">63%</div>
+            </div>
+            <h3 class="pillar-title">Security &amp; Data Protection</h3>
+            <p class="pillar-stat">68% of Indians worry about Aadhaar &amp; UPI data privacy after AIIMS breach</p>
+            <div class="pillar-badges">
+              <span class="cert-badge">ISO 27001</span>
+              <span class="cert-badge">CERT-In</span>
+              <span class="cert-badge">IT Act 2000</span>
+            </div>
+            <div class="pillar-expand-hint">Click to expand ↓</div>
+            <div class="pillar-detail" id="pillar-security-detail" role="region" aria-label="Security details">
+              <div class="detail-stats">
+                <div class="detail-stat"><strong>13.91L+</strong> cyber complaints on NCRP portal (2024)</div>
+                <div class="detail-stat"><strong>62%</strong> increase in UPI fraud attempts (2024)</div>
+                <div class="detail-stat"><strong>DPDP Act 2023</strong> — India's new data protection law</div>
+              </div>
+              <div class="detail-bar">
+                <div class="bar-label">Public Confidence in Aadhaar Data Security</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%" data-target="41%" data-color="#ef4444"></div></div>
+                <span class="bar-val">41%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2: Transparency -->
+          <div class="pillar-card" id="pillar-transparency" tabindex="0" role="button" aria-expanded="false" aria-controls="pillar-transparency-detail" data-pillar="transparency">
+            <div class="pillar-icon transparency">🔍</div>
+            <div class="pillar-score-ring">
+              <svg class="ring-svg" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e3a5f" stroke-width="6"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#22c55e" stroke-width="6"
+                  stroke-dasharray="201" stroke-dashoffset="75" stroke-linecap="round" transform="rotate(-90 40 40)"
+                  class="ring-progress" data-value="62"/>
+              </svg>
+              <div class="ring-label">62%</div>
+            </div>
+            <h3 class="pillar-title">Transparency &amp; Openness</h3>
+            <p class="pillar-stat">71% of Indians want clearer explanation of how government AI systems decide</p>
+            <div class="pillar-badges">
+              <span class="cert-badge green">data.gov.in</span>
+              <span class="cert-badge green">RTI Online</span>
+            </div>
+            <div class="pillar-expand-hint">Click to expand ↓</div>
+            <div class="pillar-detail" id="pillar-transparency-detail" role="region">
+              <div class="detail-stats">
+                <div class="detail-stat"><strong>3.4M+</strong> datasets on open data.gov.in portal</div>
+                <div class="detail-stat"><strong>MyGov.in</strong> — 35M+ citizen consultations</div>
+                <div class="detail-stat"><strong>RTI Online</strong> — 20L+ annual RTI requests</div>
+              </div>
+              <div class="detail-bar">
+                <div class="bar-label">Algorithmic Transparency Score</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%" data-target="62.4%" data-color="#22c55e"></div></div>
+                <span class="bar-val">62.4%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 3: Service Quality -->
+          <div class="pillar-card" id="pillar-quality" tabindex="0" role="button" aria-expanded="false" aria-controls="pillar-quality-detail" data-pillar="quality">
+            <div class="pillar-icon quality">⚡</div>
+            <div class="pillar-score-ring">
+              <svg class="ring-svg" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e3a5f" stroke-width="6"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" stroke-width="6"
+                  stroke-dasharray="201" stroke-dashoffset="50" stroke-linecap="round" transform="rotate(-90 40 40)"
+                  class="ring-progress" data-value="75"/>
+              </svg>
+              <div class="ring-label">75%</div>
+            </div>
+            <h3 class="pillar-title">Service Quality &amp; Reliability</h3>
+            <p class="pillar-stat">UMANG app hosts 1,700+ services but only 38% of users complete transactions successfully</p>
+            <div class="pillar-badges">
+              <span class="cert-badge orange">UPI 99.9%</span>
+              <span class="cert-badge orange">NIC SLA</span>
+            </div>
+            <div class="pillar-expand-hint">Click to expand ↓</div>
+            <div class="pillar-detail" id="pillar-quality-detail" role="region">
+              <div class="detail-stats">
+                <div class="detail-stat"><strong>500Cr+</strong> UPI transactions/month (99.99% uptime)</div>
+                <div class="detail-stat"><strong>38%</strong> UMANG task completion rate (needs improvement)</div>
+                <div class="detail-stat"><strong>CoWIN</strong> — 2.2 Billion doses tracked flawlessly</div>
+              </div>
+              <div class="detail-bar">
+                <div class="bar-label">Service Satisfaction Score</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%" data-target="75%" data-color="#f59e0b"></div></div>
+                <span class="bar-val">75%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 4: UX -->
+          <div class="pillar-card" id="pillar-ux" tabindex="0" role="button" aria-expanded="false" aria-controls="pillar-ux-detail" data-pillar="ux">
+            <div class="pillar-icon ux">👤</div>
+            <div class="pillar-score-ring">
+              <svg class="ring-svg" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e3a5f" stroke-width="6"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#8b5cf6" stroke-width="6"
+                  stroke-dasharray="201" stroke-dashoffset="67" stroke-linecap="round" transform="rotate(-90 40 40)"
+                  class="ring-progress" data-value="67"/>
+              </svg>
+              <div class="ring-label">67%</div>
+            </div>
+            <h3 class="pillar-title">User-Friendly Design</h3>
+            <p class="pillar-stat">72% of rural Indians cite complicated interfaces as a barrier to digital gov services</p>
+            <div class="pillar-badges">
+              <span class="cert-badge purple">22 Languages</span>
+              <span class="cert-badge purple">GIGW Compliant</span>
+            </div>
+            <div class="pillar-expand-hint">Click to expand ↓</div>
+            <div class="pillar-detail" id="pillar-ux-detail" role="region">
+              <div class="detail-stats">
+                <div class="detail-stat"><strong>22</strong> official languages; most gov portals support only 2–3</div>
+                <div class="detail-stat"><strong>52%</strong> rural internet users struggle with gov app UX</div>
+                <div class="detail-stat"><strong>BharatNet</strong> — 2.5L+ gram panchayats connected</div>
+              </div>
+              <div class="detail-bar">
+                <div class="bar-label">Accessibility Compliance Rate</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%" data-target="67%" data-color="#8b5cf6"></div></div>
+                <span class="bar-val">67%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: REALITY GAP VISUALIZER ===== -->
+    <section class="section dark-section" id="reality-gap" aria-labelledby="gap-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge light">Reality Gap</div>
+          <h2 id="gap-title" class="section-title light">India's Digital Service Reality Gap</h2>
+          <p class="section-subtitle light">Where 1.4 billion citizens' expectations diverge from actual digital service delivery</p>
+        </div>
+
+        <div class="gap-grid">
+          <!-- Pain Point Tracker -->
+          <div class="card dark-card" role="region" aria-label="Pain point tracker">
+            <div class="card-header">
+              <h3 class="card-title light">Pain Point Tra              <div class="pain-points">
+              <div class="pain-item" role="listitem">
+                <div class="pain-icon">😤</div>
+                <div class="pain-content">
+                  <div class="pain-stat"><span class="count-up" data-target="72">0</span>%</div>
+                  <div class="pain-label">rural citizens face barriers using government digital portals</div>
+                </div>
+                <div class="pain-bar-outer">
+                  <div class="pain-bar-inner" style="width:0%" data-target="72"></div>
+                </div>
+              </div>
+              <div class="pain-item" role="listitem">
+                <div class="pain-icon">🌐</div>
+                <div class="pain-content">
+                  <div class="pain-stat"><span class="count-up" data-target="61">0</span>%</div>
+                  <div class="pain-label">visit multiple portals for a single government task</div>
+                </div>
+                <div class="pain-bar-outer">
+                  <div class="pain-bar-inner" style="width:0%" data-target="61"></div>
+                </div>
+              </div>
+              <div class="pain-item" role="listitem">
+                <div class="pain-icon">📵</div>
+                <div class="pain-content">
+                  <div class="pain-stat"><span class="count-up" data-target="48">0</span>%</div>
+                  <div class="pain-label">faced OTP / KYC failure during Aadhaar verification</div>
+                </div>
+                <div class="pain-bar-outer">
+                  <div class="pain-bar-inner" style="width:0%" data-target="48"></div>
+                </div>
+              </div>
+              <div class="pain-item" role="listitem">
+                <div class="pain-icon">🗣️</div>
+                <div class="pain-content">
+                  <div class="pain-stat"><span class="count-up" data-target="67">0</span>%</div>
+                  <div class="pain-label">want services available in their regional language</div>
+                </div>
+                <div class="pain-bar-outer">
+                  <div class="pain-bar-inner" style="width:0%" data-target="67"></div>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Citizen Journey Map -->
+          <div class="card dark-card journey-card" role="region" aria-label="Citizen journey map">
+            <div class="card-header">
+              <h3 class="card-title light">Indian Citizen Frustration Journey</h3>
+              <div class="toggle-group" role="group" aria-label="View toggle">
+                <button class="toggle-btn active" id="beforeBtn" aria-pressed="true">Before</button>
+                <button class="toggle-btn" id="afterBtn" aria-pressed="false">After Reform</button>
+              </div>
+            </div>
+            <div class="journey-map" id="journeyMap" role="img" aria-label="Journey map visualization">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: BARRIER ANALYSIS MATRIX ===== -->
+    <section class="section" id="barriers" aria-labelledby="barrier-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge">Analysis</div>
+          <h2 id="barrier-title" class="section-title">India E-Gov Barrier Matrix</h2>
+          <p class="section-subtitle">Interactive quadrant analysis of India-specific digital trust barriers and recommended solutions</p>
+        </div>
+
+        <div class="barrier-grid">
+          <!-- Quadrant Chart -->
+          <div class="card barrier-chart-card" role="region" aria-label="Barrier quadrant analysis">
+            <div class="card-header">
+              <h3 class="card-title">Impact vs. Prevalence Matrix</h3>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot red"></span>Critical</span>
+                <span class="legend-item"><span class="legend-dot orange"></span>High</span>
+                <span class="legend-item"><span class="legend-dot yellow"></span>Medium</span>
+              </div>
+            </div>
+            <div class="quadrant-container" id="quadrantChart" role="img" aria-label="Quadrant chart showing barriers">
+              <div class="quadrant-axis y-axis" aria-hidden="true">← Lower Impact &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Higher Impact →</div>
+              <div class="quadrant-axis x-axis" aria-hidden="true">← Less Prevalent &nbsp;&nbsp;&nbsp;&nbsp; More Prevalent →</div>
+              <div class="quadrant-grid">
+                <div class="quadrant q1"><span class="q-label">Monitor</span></div>
+                <div class="quadrant q2"><span class="q-label">Address First</span></div>
+                <div class="quadrant q3"><span class="q-label">Watch</span></div>
+                <div class="quadrant q4"><span class="q-label">Strategic Priority</span></div>
+              </div>
+              <div class="barrier-dots" id="barrierDots" role="list">
+                <!-- populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Barrier Cards -->
+          <div class="barrier-cards-list" role="list">
+            <div class="barrier-card" data-barrier="0" tabindex="0" role="listitem button" aria-label="Security concern barrier">
+              <div class="barrier-icon">🔐</div>
+              <div class="barrier-content">
+                <div class="barrier-header-row">
+                  <h4 class="barrier-name">Security &amp; Privacy Concerns</h4>
+                  <span class="severity high">High</span>
+                </div>
+                <!-- Description removed -->
+                <div class="barrier-progress">
+                  <div class="bp-fill" style="width:0%" data-target="89"></div>
+                </div>
+                <!-- Solution removed -->
+              </div>
+            </div>
+
+            <div class="barrier-card" data-barrier="1" tabindex="0" role="listitem button" aria-label="UX complexity barrier">
+              <div class="barrier-icon">🧩</div>
+              <div class="barrier-content">
+                <div class="barrier-header-row">
+                  <h4 class="barrier-name">Complexity &amp; Poor UX</h4>
+                  <span class="severity medium">Medium</span>
+                </div>
+                <!-- Description removed -->
+                <div class="barrier-progress">
+                  <div class="bp-fill" style="width:0%" data-target="74"></div>
+                </div>
+                <!-- Solution removed -->
+              </div>
+            </div>
+
+            <div class="barrier-card" data-barrier="2" tabindex="0" role="listitem button" aria-label="Digital literacy barrier">
+              <div class="barrier-icon">📚</div>
+              <div class="barrier-content">
+                <div class="barrier-header-row">
+                  <h4 class="barrier-name">Digital Literacy Gaps</h4>
+                  <span class="severity medium">Medium</span>
+                </div>
+                <!-- Description removed -->
+                <div class="barrier-progress">
+                  <div class="bp-fill" style="width:0%" data-target="66"></div>
+                </div>
+                <!-- Solution removed -->
+              </div>
+            </div>
+
+            <div class="barrier-card" data-barrier="3" tabindex="0" role="listitem button" aria-label="Transparency barrier">
+              <div class="barrier-icon">👁️</div>
+              <div class="barrier-content">
+                <div class="barrier-header-row">
+                  <h4 class="barrier-name">Lack of Transparency</h4>
+                  <span class="severity medium">Medium</span>
+                </div>
+                <!-- Description removed -->
+                <div class="barrier-progress">
+                  <div class="bp-fill" style="width:0%" data-target="56"></div>
+                </div>
+                <!-- Solution removed -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: ADOPTION IMPACT SIMULATOR ===== -->
+    <section class="section gradient-section" id="simulator" aria-labelledby="sim-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge">Interactive</div>
+          <h2 id="sim-title" class="section-title">India Adoption Impact Simulator</h2>
+          <p class="section-subtitle">Adjust India-specific trust levers to see projected impact on digital government adoption rates</p>
+        </div>
+
+        <div class="simulator-grid">
+          <div class="card sim-controls-card" role="region" aria-label="Simulator controls">
+            <h3 class="card-title">Adjust India Trust Levers</h3>
+            <div class="sliders-container">
+              <div class="slider-row" role="group" aria-labelledby="slider1-label">
+                <div class="slider-header">
+                  <label class="slider-label" id="slider1-label">
+                    <span class="slider-icon">🚪</span>
+                    Jan Seva Unified Portal
+                  </label>
+                  <span class="slider-value" id="val1">58%</span>
+                </div>
+                <input type="range" class="trust-slider" id="slider1" min="0" max="100" value="58" aria-label="Jan Seva portal impact" />
+                <div class="slider-caption">58% would increase UMANG usage with single portal</div>
+              </div>
+
+              <div class="slider-row" role="group" aria-labelledby="slider2-label">
+                <div class="slider-header">
+                  <label class="slider-label" id="slider2-label">
+                    <span class="slider-icon">💬</span>
+                    Regional Language Support
+                  </label>
+                  <span class="slider-value" id="val2">67%</span>
+                </div>
+                <input type="range" class="trust-slider" id="slider2" min="0" max="100" value="67" aria-label="Regional language support impact" />
+                <div class="slider-caption">67% want native language digital services</div>
+              </div>
+
+              <div class="slider-row" role="group" aria-labelledby="slider3-label">
+                <div class="slider-header">
+                  <label class="slider-label" id="slider3-label">
+                    <span class="slider-icon">🤖</span>
+                    AI &amp; Chatbot Assistance
+                  </label>
+                  <span class="slider-value" id="val3">62%</span>
+                </div>
+                <input type="range" class="trust-slider" id="slider3" min="0" max="100" value="62" aria-label="AI assistant service impact" />
+                <div class="slider-caption">62% open to AI help for gov service navigation</div>
+              </div>
+
+              <div class="slider-row" role="group" aria-labelledby="slider4-label">
+                <div class="slider-header">
+                  <label class="slider-label" id="slider4-label">
+                    <span class="slider-icon">🛡️</span>
+                    Aadhaar &amp; Data Security
+                  </label>
+                  <span class="slider-value" id="val4">71%</span>
+                </div>
+                <input type="range" class="trust-slider" id="slider4" min="0" max="100" value="71" aria-label="Aadhaar data security trust impact" />
+                <div class="slider-caption">71% say stronger privacy law boosts trust</div>
+              </div>
+            </div>
+            <button class="btn-reset" id="resetSliders" aria-label="Reset all sliders to default values">↺ Reset to Baseline</button>
+          </div>
+
+          <div class="sim-output-panel" role="region" aria-label="Projected outcomes">
+            <div class="card sim-result-card">
+              <div class="result-label">Projected Adoption Rate</div>
+              <div class="result-gauge">
+                <canvas id="adoptionGauge" width="200" height="120" aria-label="Adoption rate gauge"></canvas>
+                <div class="result-number" id="adoptionResult">55%</div>
+              </div>
+              <div class="result-change" id="adoptionChange">
+                <span class="trend-up">↑ +13pp vs baseline</span>
+              </div>
+            </div>
+            <div class="card sim-breakdown-card">
+              <h4 class="breakdown-title">Impact Breakdown</h4>
+              <div class="breakdown-item">
+                <span>Portal Unification</span>
+                <span class="breakdown-val" id="breakdown1">+12.8pp</span>
+              </div>
+              <div class="breakdown-item">
+                <span>Trust Communication</span>
+                <span class="breakdown-val" id="breakdown2">+14.0pp</span>
+              </div>
+              <div class="breakdown-item">
+                <span>AI Services</span>
+                <span class="breakdown-val" id="breakdown3">+13.8pp</span>
+              </div>
+              <div class="breakdown-item">
+                <span>Cyber Trust</span>
+                <span class="breakdown-val" id="breakdown4">+14.5pp</span>
+              </div>
+              <div class="breakdown-total">
+                <span>Net Adoption Gain</span>
+                <span class="breakdown-val total" id="breakdownTotal">+55.1pp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: SUCCESS STORIES ===== -->
+    <section class="section" id="success-stories" aria-labelledby="stories-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge">Case Studies</div>
+          <h2 id="stories-title" class="section-title">India Digital Gov Success Stories</h2>
+          <p class="section-subtitle">India's landmark e-governance transformations that rebuilt citizen trust at scale</p>
+        </div>
+
+        <div class="stories-grid">
+          <!-- Case Study 1: CoWIN -->
+          <div class="story-card" role="article" aria-label="CoWIN vaccination platform case study">
+            <div class="story-header va-header">
+              <div class="story-flag">🇮🇳</div>
+              <div class="story-agency">
+                <div class="agency-name">CoWIN Platform</div>
+                <div class="agency-country">India · MoHFW</div>
+              </div>
+              <div class="story-rating">⭐ 4.7</div>
+            </div>
+            <div class="story-body">
+              <div class="story-metric-row">
+                <div class="story-metric">
+                  <div class="metric-val trust-improve">+78%</div>
+                  <div class="metric-label">Public Trust Gain</div>
+                </div>
+                <div class="story-metric">
+                  <div class="metric-val">2.2B</div>
+                  <div class="metric-label">Doses Tracked</div>
+                </div>
+              </div>
+              <div class="story-timeline" role="region" aria-label="CoWIN transformation timeline">
+                <div class="timeline-header">
+                  <span>Jan 2021</span>
+                  <span>Transformation Journey</span>
+                  <span>Dec 2023</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-fill va-fill" style="width:0%" data-target="90%"></div>
+                  <div class="timeline-thumb" id="va-thumb"></div>
+                </div>
+                <input type="range" class="story-slider" id="vaSlider" min="0" max="100" value="90" aria-label="CoWIN timeline" />
+                <div class="timeline-milestones">
+                  <div class="milestone" style="left:10%"><span class="dot"></span><span class="m-label">Launch</span></div>
+                  <div class="milestone" style="left:35%"><span class="dot"></span><span class="m-label">Scale-up</span></div>
+                  <div class="milestone" style="left:65%"><span class="dot"></span><span class="m-label">Open API</span></div>
+                  <div class="milestone" style="left:88%"><span class="dot"></span><span class="m-label">2.2B Doses</span></div>
+                </div>
+              </div>
+              <p class="story-desc">World's largest digital vaccination platform — open-sourced &amp; adopted by 60+ countries. Real-time slot booking, QR certificates, and zero paper-based fraud.</p>
+              <div class="story-tags">
+                <span class="tag">Public Health</span>
+                <span class="tag">Open Source</span>
+                <span class="tag">Real-time Data</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 2: DigiLocker -->
+          <div class="story-card" role="article" aria-label="DigiLocker case study">
+            <div class="story-header irs-header">
+              <div class="story-flag">🇮🇳</div>
+              <div class="story-agency">
+                <div class="agency-name">DigiLocker</div>
+                <div class="agency-country">India · MeitY / NIC</div>
+              </div>
+              <div class="story-rating badge-new">🏆 Award</div>
+            </div>
+            <div class="story-body">
+              <div class="story-metric-row">
+                <div class="story-metric">
+                  <div class="metric-val trust-improve">310M+</div>
+                  <div class="metric-label">Registered Users</div>
+                </div>
+                <div class="story-metric">
+                  <div class="metric-val">6.5B</div>
+                  <div class="metric-label">Docs Issued</div>
+                </div>
+              </div>
+              <div class="story-timeline" role="region" aria-label="DigiLocker timeline">
+                <div class="timeline-header">
+                  <span>2015</span>
+                  <span>Transformation Journey</span>
+                  <span>2025</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-fill irs-fill" style="width:0%" data-target="88%"></div>
+                  <div class="timeline-thumb" id="irs-thumb"></div>
+                </div>
+                <input type="range" class="story-slider" id="irsSlider" min="0" max="100" value="88" aria-label="DigiLocker timeline" />
+                <div class="timeline-milestones">
+                  <div class="milestone" style="left:15%"><span class="dot"></span><span class="m-label">Beta</span></div>
+                  <div class="milestone" style="left:40%"><span class="dot"></span><span class="m-label">SC mandate</span></div>
+                  <div class="milestone" style="left:65%"><span class="dot"></span><span class="m-label">100M users</span></div>
+                  <div class="milestone" style="left:88%"><span class="dot"></span><span class="m-label">310M users</span></div>
+                </div>
+              </div>
+              <p class="story-desc">Eliminated physical document verification for driving licences, PAN cards, degree certificates — saving citizens 120Cr+ hours. Now accepted by 1,000+ agencies.</p>
+              <div class="story-tags">
+                <span class="tag">Digital Identity</span>
+                <span class="tag">Paperless</span>
+                <span class="tag">Legal Validity</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 3: UMANG App -->
+          <div class="story-card" role="article" aria-label="UMANG app case study">
+            <div class="story-header nsw-header">
+              <div class="story-flag">🇮🇳</div>
+              <div class="story-agency">
+                <div class="agency-name">UMANG App</div>
+                <div class="agency-country">India · MeitY / NeGD</div>
+              </div>
+              <div class="story-rating">⭐ 4.2</div>
+            </div>
+            <div class="story-body">
+              <div class="story-metric-row">
+                <div class="story-metric">
+                  <div class="metric-val trust-improve">1,700+</div>
+                  <div class="metric-label">Services Integrated</div>
+                </div>
+                <div class="story-metric">
+                  <div class="metric-val">200M+</div>
+                  <div class="metric-label">Downloads</div>
+                </div>
+              </div>
+              <div class="story-timeline" role="region" aria-label="UMANG timeline">
+                <div class="timeline-header">
+                  <span>2017</span>
+                  <span>Transformation Journey</span>
+                  <span>2025</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-fill nsw-fill" style="width:0%" data-target="80%"></div>
+                  <div class="timeline-thumb" id="nsw-thumb"></div>
+                </div>
+                <input type="range" class="story-slider" id="nswSlider" min="0" max="100" value="80" aria-label="UMANG timeline" />
+                <div class="timeline-milestones">
+                  <div class="milestone" style="left:10%"><span class="dot"></span><span class="m-label">Launch</span></div>
+                  <div class="milestone" style="left:35%"><span class="dot"></span><span class="m-label">500 svcs</span></div>
+                  <div class="milestone" style="left:62%"><span class="dot"></span><span class="m-label">1K svcs</span></div>
+                  <div class="milestone" style="left:88%"><span class="dot"></span><span class="m-label">1,700+ svcs</span></div>
+                </div>
+              </div>
+              <p class="story-desc">India's super-app for government — EPFO pension, Aadhaar, PAN, passport, Bharat Gas, scholarships — all in one platform. UX improvements underway to boost 38% completion rate.</p>
+              <div class="story-tags">
+                <span class="tag">Unified Gov App</span>
+                <span class="tag">Multi-lingual</span>
+                <span class="tag">Cross-Agency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7: STRATEGIC ACTION PLANNER ===== -->
+    <section class="section dark-section" id="action-planner" aria-labelledby="planner-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-badge light">Strategy</div>
+          <h2 id="planner-title" class="section-title light">India Digital Trust Action Planner</h2>
+          <p class="section-subtitle light">Drag and prioritize the 8 strategic recommendations for India's digital government reform</p>
+        </div>
+
+        <div class="planner-grid">
+          <!-- Priority Matrix -->
+          <div class="priority-matrix" role="region" aria-label="Draggable priority matrix">
+            <div class="matrix-header">
+              <h3 class="card-title light">Priority Matrix</h3>
+              <p class="matrix-hint">Drag recommendations to reprioritize · <span class="hint-accent">Active plan auto-saves</span></p>
+            </div>
+            <div class="matrix-columns">
+              <div class="matrix-col" id="quick-wins" data-phase="quick" role="list" aria-label="Quick wins column" aria-dropeffect="move">
+                <div class="col-header quick">
+                  <span class="col-icon">⚡</span>
+                  <span>Quick Wins</span>
+                  <span class="col-time">0–6 months</span>
+                </div>
+                <div class="col-items" id="qw-items">
+                  <!-- Items added by JS -->
+                </div>
+              </div>
+              <div class="matrix-col" id="medium-term" data-phase="medium" role="list" aria-label="Medium-term column" aria-dropeffect="move">
+                <div class="col-header medium">
+                  <span class="col-icon">🎯</span>
+                  <span>Medium-Term</span>
+                  <span class="col-time">6–18 months</span>
+                </div>
+                <div class="col-items" id="mt-items">
+                  <!-- Items added by JS -->
+                </div>
+              </div>
+              <div class="matrix-col" id="long-term" data-phase="long" role="list" aria-label="Long-term column" aria-dropeffect="move">
+                <div class="col-header long">
+                  <span class="col-icon">🚀</span>
+                  <span>Long-Term</span>
+                  <span class="col-time">18+ months</span>
+                </div>
+                <div class="col-items" id="lt-items">
+                  <!-- Items added by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roadmap / Feedback -->
+          <div class="planner-sidebar">
+            <div class="card dark-card roadmap-card" role="region" aria-label="Implementation roadmap">
+              <h3 class="card-title light">Implementation Roadmap</h3>
+              <div class="roadmap-timeline" role="list">
+                <div class="roadmap-item" role="listitem">
+                  <div class="roadmap-dot green-dot"></div>
+                  <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 1 · Q1-Q2 2025</div>
+                    <div class="roadmap-actions">DPDP Act enforcement · CERT-In upgrades · UMANG UX overhaul · MyGov feedback loop</div>
+                  </div>
+                </div>
+                <div class="roadmap-item" role="listitem">
+                  <div class="roadmap-dot blue-dot"></div>
+                  <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 2 · Q3 2025 – Q2 2026</div>
+                    <div class="roadmap-actions">National Digital ID expansion · PMGDISHA scale-up · 22-language portal rollout · CSC upgrades</div>
+                  </div>
+                </div>
+                <div class="roadmap-item" role="listitem">
+                  <div class="roadmap-dot purple-dot"></div>
+                  <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 3 · 2026 onwards</div>
+                    <div class="roadmap-actions">AI governance act · Jan Seva super-portal · State-level trust index · IndiaStack 3.0</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feedback Submission -->
+            <div class="card dark-card feedback-card" id="feedback-section" role="region" aria-label="Citizen feedback form">
+              <h3 class="card-title light">📣 Jan Bhagidari Feedback</h3>
+              <p class="feedback-subtext">आपकी आवाज़ डिजिटल भारत को बेहतर बनाती है। Share your experience with India's digital services.</p>
+              <div class="feedback-rating" role="group" aria-label="Rate your experience">
+                <button class="rating-btn" data-rating="1" aria-label="Rate 1 star">😔</button>
+                <button class="rating-btn" data-rating="2" aria-label="Rate 2 stars">😐</button>
+                <button class="rating-btn" data-rating="3" aria-label="Rate 3 stars">🙂</button>
+                <button class="rating-btn" data-rating="4" aria-label="Rate 4 stars">😊</button>
+                <button class="rating-btn" data-rating="5" aria-label="Rate 5 stars">🤩</button>
+              </div>
+              <textarea class="feedback-input" id="feedbackText" placeholder="Tell us about your experience with government digital services..." rows="3" aria-label="Feedback text"></textarea>
+              <button class="btn-submit" id="submitFeedback" aria-label="Submit feedback">Submit Feedback · प्रस्तुत करें ✉️</button>
+              <div class="feedback-success hidden" id="feedbackSuccess" role="alert" aria-live="polite">
+                ✅ Thank you! Your feedback has been recorded.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: BEHIND THE BUILD ===== -->
+    <section class="section btb-section" id="behind-build" aria-labelledby="btb-title">
+      <div class="container">
+
+        <div class="section-header">
+          <div class="section-badge">
+            <span class="badge-dot pulse"></span>
+            Behind the Build
+          </div>
+          <h2 id="btb-title" class="section-title">How CitiGov Was Built</h2>
+          <p class="section-subtitle">A look inside the design decisions, features, and technology that power India's Digital Trust Analytics Dashboard</p>
+        </div>
+
+        <!-- ── Screenshot Showcase ────────────── -->
+        <div class="btb-screenshots-grid">
+
+          <!-- Card 1: Hero Dashboard -->
+          <div class="btb-shot-card btb-shot-featured" role="figure" aria-label="Dashboard Hero screenshot">
+            <div class="btb-shot-frame">
+              <div class="btb-browser-bar">
+                <span class="btb-dot btb-dot-red"></span>
+                <span class="btb-dot btb-dot-yellow"></span>
+                <span class="btb-dot btb-dot-green"></span>
+                <span class="btb-address-bar">citigov.in/dashboard</span>
+              </div>
+              <img src="images/screenshot_hero.png" alt="CitiGov Trust Scorecard dashboard with gauge chart and sector comparison" class="btb-shot-img" loading="lazy" />
+              <div class="btb-shot-overlay">
+                <span class="btb-shot-tag">Section 1 · Live</span>
+              </div>
+            </div>
+            <div class="btb-shot-info">
+              <h3 class="btb-shot-title">Executive Trust Scorecard</h3>
+              <p class="btb-shot-desc">Real-time India Digital Trust Index showing a 54% citizen trust score, with sector comparison bar charts and state-wise heatmap — all powered by Chart.js and live CSS animations.</p>
+              <div class="btb-shot-tags">
+                <span class="btb-tag">Chart.js v4</span>
+                <span class="btb-tag">CSS Gauge</span>
+                <span class="btb-tag">ARIA Live</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Trust Pillars -->
+          <div class="btb-shot-card" role="figure" aria-label="Trust Pillars screenshot">
+            <div class="btb-shot-frame">
+              <div class="btb-browser-bar">
+                <span class="btb-dot btb-dot-red"></span>
+                <span class="btb-dot btb-dot-yellow"></span>
+                <span class="btb-dot btb-dot-green"></span>
+                <span class="btb-address-bar">citigov.in/#trust-factors</span>
+              </div>
+              <img src="images/screenshot_pillars.png" alt="India Trust Factor Breakdown with four pillar cards showing ring charts" class="btb-shot-img" loading="lazy" />
+              <div class="btb-shot-overlay">
+                <span class="btb-shot-tag">Section 2 · Interactive</span>
+              </div>
+            </div>
+            <div class="btb-shot-info">
+              <h3 class="btb-shot-title">Trust Pillar Breakdown</h3>
+              <p class="btb-shot-desc">Four expandable pillar cards — Security, Transparency, Service Quality & UX — each with animated SVG ring charts and click-to-reveal detail panels built in pure CSS.</p>
+              <div class="btb-shot-tags">
+                <span class="btb-tag">SVG Rings</span>
+                <span class="btb-tag">CSS Expand</span>
+                <span class="btb-tag">Glassmorphism</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Simulator -->
+          <div class="btb-shot-card" role="figure" aria-label="Impact Simulator screenshot">
+            <div class="btb-shot-frame">
+              <div class="btb-browser-bar">
+                <span class="btb-dot btb-dot-red"></span>
+                <span class="btb-dot btb-dot-yellow"></span>
+                <span class="btb-dot btb-dot-green"></span>
+                <span class="btb-address-bar">citigov.in/#simulator</span>
+              </div>
+              <img src="images/screenshot_simulator.png" alt="India Adoption Impact Simulator with trust levers and projected adoption gauge" class="btb-shot-img" loading="lazy" />
+              <div class="btb-shot-overlay">
+                <span class="btb-shot-tag">Section 5 · Simulator</span>
+              </div>
+            </div>
+            <div class="btb-shot-info">
+              <h3 class="btb-shot-title">Adoption Impact Simulator</h3>
+              <p class="btb-shot-desc">Drag four trust levers — portal unification, language support, AI assistance, data security — and watch the projected adoption rate recalculate in real-time using weighted JS formulas.</p>
+              <div class="btb-shot-tags">
+                <span class="btb-tag">Range Sliders</span>
+                <span class="btb-tag">Chart.js Gauge</span>
+                <span class="btb-tag">Real-time Calc</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Action Planner -->
+          <div class="btb-shot-card" role="figure" aria-label="Action Planner screenshot">
+            <div class="btb-shot-frame">
+              <div class="btb-browser-bar">
+                <span class="btb-dot btb-dot-red"></span>
+                <span class="btb-dot btb-dot-yellow"></span>
+                <span class="btb-dot btb-dot-green"></span>
+                <span class="btb-address-bar">citigov.in/#action-planner</span>
+              </div>
+              <img src="images/screenshot_planner.png" alt="India Digital Trust Action Planner with draggable priority matrix" class="btb-shot-img" loading="lazy" />
+              <div class="btb-shot-overlay">
+                <span class="btb-shot-tag">Section 7 · Drag & Drop</span>
+              </div>
+            </div>
+            <div class="btb-shot-info">
+              <h3 class="btb-shot-title">Strategic Action Planner</h3>
+              <p class="btb-shot-desc">A drag-and-drop priority matrix (Quick Wins / Medium / Long Term) built with the HTML5 Drag & Drop API, auto-saving your plan to localStorage between sessions.</p>
+              <div class="btb-shot-tags">
+                <span class="btb-tag">Drag & Drop API</span>
+                <span class="btb-tag">localStorage</span>
+                <span class="btb-tag">Auto-save</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tech Stack ─────────────────────── -->
+        <div class="btb-divider-row">
+          <div class="btb-divider-line"></div>
+          <span class="btb-divider-label">Tech Stack</span>
+          <div class="btb-divider-line"></div>
+        </div>
+
+        <div class="btb-stack-grid">
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(245,158,11,.15);color:#f59e0b;">HTML</div>
+            <div class="btb-stack-name">HTML5</div>
+            <div class="btb-stack-desc">Semantic, accessible markup with ARIA roles, live regions, and structured headings for screen-reader support</div>
+          </div>
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(37,99,235,.15);color:#60a5fa;">CSS</div>
+            <div class="btb-stack-name">Vanilla CSS</div>
+            <div class="btb-stack-desc">Custom design system with CSS variables, glassmorphism cards, keyframe animations, and fully responsive grid layouts</div>
+          </div>
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(234,179,8,.15);color:#eab308;">JS</div>
+            <div class="btb-stack-name">Vanilla JS</div>
+            <div class="btb-stack-desc">Zero-dependency frontend logic: count-up animations, intersection observers, drag-and-drop, and localStorage persistence</div>
+          </div>
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(239,68,68,.15);color:#f87171;">📊</div>
+            <div class="btb-stack-name">Chart.js v4</div>
+            <div class="btb-stack-desc">Doughnut gauges, horizontal bar charts, and arc-based adoption simulators with custom tooltips and dark-mode theming</div>
+          </div>
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(139,92,246,.15);color:#a78bfa;">🔤</div>
+            <div class="btb-stack-name">Google Fonts</div>
+            <div class="btb-stack-desc">Inter + DM Sans for a clean, modern typographic hierarchy with 9 weight variants for display and body text</div>
+          </div>
+          <div class="btb-stack-item">
+            <div class="btb-stack-icon" style="background:rgba(14,165,233,.15);color:#38bdf8;">🗃️</div>
+            <div class="btb-stack-name">localStorage</div>
+            <div class="btb-stack-desc">Client-side persistence for user accounts (signup/login), drag-and-drop priorities, feedback ratings, and session state</div>
+          </div>
+        </div>
+
+        <!-- ── Build Timeline ─────────────────── -->
+        <div class="btb-divider-row">
+          <div class="btb-divider-line"></div>
+          <span class="btb-divider-label">Build Journey</span>
+          <div class="btb-divider-line"></div>
+        </div>
+
+        <div class="btb-timeline">
+          <div class="btb-tl-item">
+            <div class="btb-tl-dot" style="background:var(--blue-mid);"></div>
+            <div class="btb-tl-content">
+              <div class="btb-tl-step">Step 1</div>
+              <div class="btb-tl-title">Research & Data Curation</div>
+              <div class="btb-tl-desc">Sourced real 2025 data from Digital India Foundation, NASSCOM, UIDAI, MeitY and NASSCOM Digital Trust surveys across 42,000+ respondents in 28 states.</div>
+            </div>
+          </div>
+          <div class="btb-tl-item">
+            <div class="btb-tl-dot" style="background:var(--cyan);"></div>
+            <div class="btb-tl-content">
+              <div class="btb-tl-step">Step 2</div>
+              <div class="btb-tl-title">Design System</div>
+              <div class="btb-tl-desc">Built a complete CSS design token system — navy palette, glassmorphism cards, glow effects, micro-animations — inspired by modern gov-tech dashboards from Singapore and Estonia.</div>
+            </div>
+          </div>
+          <div class="btb-tl-item">
+            <div class="btb-tl-dot" style="background:var(--green);"></div>
+            <div class="btb-tl-content">
+              <div class="btb-tl-step">Step 3</div>
+              <div class="btb-tl-title">Interactive Components</div>
+              <div class="btb-tl-desc">Built 7 feature sections: Trust Scorecard, Pillar Cards, Reality Gap Journey Map, Barrier Quadrant, Adoption Simulator, Case Studies, and a Drag-and-Drop Action Planner.</div>
+            </div>
+          </div>
+          <div class="btb-tl-item">
+            <div class="btb-tl-dot" style="background:var(--purple);"></div>
+            <div class="btb-tl-content">
+              <div class="btb-tl-step">Step 4</div>
+              <div class="btb-tl-title">Auth System & Accounts</div>
+              <div class="btb-tl-desc">Added a full Login + Create Account flow with localStorage-based user storage, password strength meter, field validation, and session persistence — no backend needed.</div>
+            </div>
+          </div>
+          <div class="btb-tl-item">
+            <div class="btb-tl-dot" style="background:var(--orange);"></div>
+            <div class="btb-tl-content">
+              <div class="btb-tl-step">Step 5</div>
+              <div class="btb-tl-title">Accessibility & Polish</div>
+              <div class="btb-tl-desc">WCAG 2.1 AA compliance: semantic HTML, keyboard navigation, ARIA live regions, focus rings, responsive design for mobile, tablet, and desktop viewports.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+              <rect width="28" height="28" rx="8" fill="url(#footerLogoGrad)"/>
+              <path d="M14 6L20 10V14C20 17.314 17.314 20 14 20C10.686 20 8 17.314 8 14V10L14 6Z" fill="white" opacity="0.9"/>
+              <circle cx="14" cy="14" r="3" fill="#22d3ee"/>
+              <defs>
+                <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="28" y2="28">
+                  <stop offset="0%" stop-color="#1e40af"/>
+                  <stop offset="100%" stop-color="#0ea5e9"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="brand-text">Citi<span class="brand-accent">Gov</span></span>
+          </div>
+          <p class="footer-desc">Empowering transparent, trustworthy digital government services for every citizen.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <div class="footer-col-title">Platform</div>
+            <a href="#scorecard" class="footer-link">Trust Dashboard</a>
+            <a href="#trust-factors" class="footer-link">Trust Pillars</a>
+            <a href="#barriers" class="footer-link">Barrier Analysis</a>
+            <a href="#simulator" class="footer-link">Simulator</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Resources</div>
+            <a href="#success-stories" class="footer-link">Case Studies</a>
+            <a href="#action-planner" class="footer-link">Action Planner</a>
+            <a href="#feedback-section" class="footer-link">Submit Feedback</a>
+          </div>
+          <div class="footer-col">
+            <div class="footer-col-title">Sources</div>
+            <span class="footer-link small">Digital India Foundation 2025</span>
+            <span class="footer-link small">NASSCOM Digital Trust Survey</span>
+            <span class="footer-link small">MeitY Annual Report 2024–25</span>
+            <span class="footer-link small">UIDAI & DigiLocker Stats 2025</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+          <span>© 2025 CiTiGov Analytics Platform · WCAG 2.1 AA Compliant · 🇮🇳 Digital India Initiative</span>
+        <span class="footer-badge">Built for Transparent &amp; Trustworthy Digital Bharat</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tooltip Container -->
+  <div class="tooltip-popup" id="tooltipPopup" role="tooltip" aria-live="polite"></div>
+
+  <!-- Export Modal -->
+  <div class="modal-overlay hidden" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+    <div class="modal-box">
+      <h3 id="exportModalTitle" class="modal-title">📊 Generate Trust Report</h3>
+      <p class="modal-desc">Select sections to include in your downloadable report:</p>
+      <div class="modal-options">
+        <label class="modal-option"><input type="checkbox" checked id="exp-scorecard"/> Executive Trust Scorecard</label>
+        <label class="modal-option"><input type="checkbox" checked id="exp-pillars"/> Trust Factor Breakdown</label>
+        <label class="modal-option"><input type="checkbox" checked id="exp-barriers"/> Barrier Analysis</label>
+        <label class="modal-option"><input type="checkbox" checked id="exp-simulator"/> Adoption Simulator Results</label>
+        <label class="modal-option"><input type="checkbox" checked id="exp-stories"/> Success Stories</label>
+        <label class="modal-option"><input type="checkbox" checked id="exp-planner"/> Action Plan</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-export modal-export" id="confirmExport" aria-label="Confirm export">Export as PDF Report</button>
+        <button class="btn-cancel" id="cancelExport" aria-label="Cancel export">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language Modal -->
+  <div class="modal-overlay hidden" id="langModal" role="dialog" aria-modal="true" aria-labelledby="langModalTitle">
+    <div class="modal-box lang-modal">
+      <h3 id="langModalTitle" class="modal-title">🌐 Select Language · भाषा चुनें</h3>
+      <p class="modal-desc">Choose your language. Key headings, labels, and badges will update instantly across CitiGov.</p>
+
+      <div class="lang-section-label">🇮🇳 Indian Languages</div>
+      <div class="lang-grid" role="listbox" aria-label="Indian language selection">
+        <button class="lang-btn active" role="option" aria-selected="true"  data-lang="EN">English</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="HI">हिन्दी</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="BN">বাংলা</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="TA">தமிழ்</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="TE">తెలుగు</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="MR">मराठी</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="GU">ગુજરાતી</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="KN">ಕನ್ನಡ</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="ML">മലയാളം</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="PA">ਪੰਜਾਬੀ</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="OR">ଓଡ଼ିଆ</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="UR">اردو</button>
+      </div>
+
+      <div class="lang-section-label" style="margin-top:16px;">🌍 Global Languages</div>
+      <div class="lang-grid" role="listbox" aria-label="Global language selection">
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="ZH">中文</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="AR">العربية</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="ES">Español</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="FR">Français</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="PT">Português</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="DE">Deutsch</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="KO">한국어</button>
+        <button class="lang-btn" role="option" aria-selected="false" data-lang="JA">日本語</button>
+      </div>
+
+      <button class="btn-cancel" id="closeLangModal" aria-label="Close language modal" style="margin-top:20px;">✕ Close</button>
+    </div>
+  </div>
+
+  <!-- i18n Translation Engine -->
+  <script src="js/i18n.js"></script>
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
